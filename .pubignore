@@ -1,0 +1,11 @@
+.dart_tool/
+thorvg/
+.gitmodules
+ffigen.yaml
+example/assets
+example/android
+example/ios
+doc/*.png
+*.iml
+_*
+.*
