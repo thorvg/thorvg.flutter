@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - thorvg (1.0.0-beta.0):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - thorvg (from `.symlinks/plugins/thorvg/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  thorvg:
+    :path: ".symlinks/plugins/thorvg/ios"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  thorvg: 27a9f39a9e5523ee15b3c8eb3770d09171974f0a
+
+PODFILE CHECKSUM: 3adf352fcddc921e2b338aa56f0c22cc77587022
+
+COCOAPODS: 1.15.2
