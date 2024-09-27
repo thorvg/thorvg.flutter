@@ -3,9 +3,9 @@
 [![pub package](https://img.shields.io/pub/v/thorvg.svg)](https://pub.dev/packages/thorvg.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-This package provides [ThorVG](https://github.com/thorvg/thorvg) runtime for Flutter, including efficient Lottie animation support based on a native API.
+This package provides the [ThorVG](https://github.com/thorvg/thorvg) runtime for Flutter, including efficient Lottie animation support via a native API.
 
-> Currently, we only support Animation(Lottie) feature in this package.
+> Currently, we only support Lottie Animation feature in this package.
 
 ## Supported Platforms
 
@@ -16,8 +16,8 @@ This package provides [ThorVG](https://github.com/thorvg/thorvg) runtime for Flu
 
 ## Usage
 
-### Animation
-Lottie implementation aims to maintain the same interface as `lottie-flutter`. If you are currently using them, you can utilize the code by simply replacing the import statement with `import 'package:thorvg/thorvg.dart'`.
+### Lottie
+The Lottie implementation aims to maintain the same interface as `lottie-flutter`. If you are currently using it, you can simply replace the import statement with `import 'package:thorvg/thorvg.dart'` to utilize the code.
 
 ```dart
 import 'package:thorvg/thorvg.dart';
@@ -48,25 +48,25 @@ class MyApp extends StatelessWidget {
 
 ## Generate Flutter binding
 
-If you change binding interface in these files
+If you change the binding interface in these files
 - `tvgFlutterLottieAnimation.h`
 - `tvgFlutterLottieAnimation.cpp`
 
-You always have to run following script:
+You must always run the following script:
 
 ```sh
-# Run at first time
+# Run for the first time
 flutter pub get
 # Generate bindings with ffigen
 flutter pub run ffigen --config ffigen.yaml
 ```
 
-You will have `./lib/src/thorvg_bindings_generated.dart`.
+You will get `./lib/src/thorvg_bindings_generated.dart`.
 
 
 ## Build
 
-Specify the ThorVG version in `.gitmodules`.
+Specify the ThorVG version in the `.gitmodules` file.
 
 ```sh
 [submodule "thorvg"]
@@ -75,7 +75,7 @@ Specify the ThorVG version in `.gitmodules`.
   branch = v0.14.x # Change to version you want
 ```
 
-Then you can run following commands to align with that version before build.
+Then you can run the following commands to align with that version before building.
 
 ```sh
 git submodule init
@@ -92,7 +92,7 @@ cd lottie
 sh flutter_build.android.sh $NDK $HOST_TAG $API
 ```
 
-Check whether these files are gnerated:
+Check whether these files are generated:
 - `android/src/main/arm64-v8a/libthorvg.so`
 - `android/src/main/armeabi-v7a/libthorvg.so`
 - `android/src/main/x86_64/libthorvg.so`
@@ -104,5 +104,5 @@ cd lottie
 sh flutter_build.ios.sh
 ```
 
-Check the file is generated:
+Check whether this file is generated:
 - `ios/Frameworks/libthorvg.dylib`
