@@ -1,5 +1,8 @@
 # ThorVG for Flutter
 
+[![pub package](https://img.shields.io/pub/v/thorvg.svg)](https://pub.dev/packages/thorvg.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 This package provides the [ThorVG](https://github.com/thorvg/thorvg) runtime for Flutter, including efficient Lottie animation support via a native API.
 
 > Currently, we only support Lottie Animation feature in this package.
