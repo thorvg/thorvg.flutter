@@ -36,7 +36,7 @@ public:
 
         animation = Animation::gen();
 
-        auto result = animation->picture()->load(data, sizeof(data), "lottie", false);
+        auto result = animation->picture()->load(data, sizeof(data), "lottie", "", false);
 
         if (result != Result::Success)
         {
@@ -177,7 +177,7 @@ private:
     {
         errorMsg = NoError;
 
-        if (Initializer::init(CanvasEngine::Sw, 0) != Result::Success)
+        if (Initializer::init(0, CanvasEngine::Sw) != Result::Success)
         {
             errorMsg = "init() fail";
             return;
