@@ -119,7 +119,7 @@ public:
         height = h;
 
         buffer = (uint8_t*)realloc(buffer, width * height * sizeof(uint32_t));
-        canvas->target((uint32_t*)buffer, width, width, height, SwCanvas::ABGR8888S);
+        canvas->target((uint32_t*)buffer, width, width, height, ColorSpace::ABGR8888S);
 
         float scale;
         float shiftX = 0.0f, shiftY = 0.0f;
