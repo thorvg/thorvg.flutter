@@ -1,3 +1,7 @@
+## 1.0.0-pre.6
+
+* Update ThorVG to v1.0.0-pre6
+
 ## 1.0.0-pre.5
 
 * Update ThorVG to v1.0.0-pre5
