@@ -15,9 +15,9 @@ public:
         Initializer::term(CanvasEngine::Sw);
     }
 
-    static unique_ptr<TvgLottieAnimation> create()
+    static TvgLottieAnimation* create()
     {
-        return unique_ptr<TvgLottieAnimation>(new TvgLottieAnimation());
+        return new TvgLottieAnimation();
     }
 
     bool load(char* data, char* mimetype, int width, int height)
@@ -52,7 +52,7 @@ public:
 
         resize(width, height);
 
-        if (canvas->push(cast(animation->picture())) != Result::Success)
+        if (canvas->push(animation->picture()) != Result::Success)
         {
             errorMsg = "push() fail";
             return false;
@@ -192,8 +192,8 @@ private:
 
 private:
     const char* errorMsg;
-    unique_ptr<SwCanvas> canvas = nullptr;
-    unique_ptr<Animation> animation = nullptr;
+    SwCanvas* canvas = nullptr;
+    Animation* animation = nullptr;
     uint8_t* buffer = nullptr;
     uint32_t width = 0;
     uint32_t height = 0;
@@ -208,7 +208,7 @@ extern "C"
 
     FlutterLottieAnimation* create()
     {
-        return (FlutterLottieAnimation*)TvgLottieAnimation::create().release();
+        return (FlutterLottieAnimation*)TvgLottieAnimation::create();
     }
 
     bool destroy(FlutterLottieAnimation* animation)
