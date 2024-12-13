@@ -32,7 +32,7 @@ public:
             return false;
         }
 
-        canvas->clear(true);
+        canvas->remove();
 
         animation = Animation::gen();
 
@@ -69,8 +69,6 @@ public:
 
         errorMsg = NoError;
 
-        canvas->clear(false);
-
         if (canvas->update() != Result::Success)
         {
             errorMsg = "update() fail";
@@ -90,7 +88,7 @@ public:
         if (!updated)
             return buffer;
 
-        if (canvas->draw() != Result::Success)
+        if (canvas->draw(true) != Result::Success)
         {
             errorMsg = "draw() fail";
             return nullptr;
