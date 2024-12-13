@@ -1,3 +1,8 @@
+## 1.0.0-pre.8
+
+* Update ThorVG to v1.0.0-pre8
+* Update binding to align canvas API with latest version
+
 ## 1.0.0-pre.7
 
 * Update ThorVG to v1.0.0-pre7
