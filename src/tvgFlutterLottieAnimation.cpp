@@ -12,7 +12,7 @@ public:
     ~TvgLottieAnimation()
     {
         free(buffer);
-        Initializer::term(CanvasEngine::Sw);
+        Initializer::term();
     }
 
     static TvgLottieAnimation* create()
@@ -34,11 +34,10 @@ public:
 
         canvas->remove();
 
+        delete(animation);
         animation = Animation::gen();
 
-        auto result = animation->picture()->load(data, sizeof(data), "lottie", "", false);
-
-        if (result != Result::Success)
+        if (animation->picture()->load(data, strlen(data), "lottie+json", "", false) != Result::Success)
         {
             errorMsg = "load() fail";
             return false;
@@ -175,7 +174,7 @@ private:
     {
         errorMsg = NoError;
 
-        if (Initializer::init(0, CanvasEngine::Sw) != Result::Success)
+        if (Initializer::init(0) != Result::Success)
         {
             errorMsg = "init() fail";
             return;
