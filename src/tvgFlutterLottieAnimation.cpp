@@ -46,8 +46,8 @@ public:
         animation->picture()->size(&psize[0], &psize[1]);
 
         /* need to reset size to calculate scale in Picture.size internally before calling resize() */
-        width = 0;
-        height = 0;
+        this->width = 0;
+        this->height = 0;
 
         resize(width, height);
 
