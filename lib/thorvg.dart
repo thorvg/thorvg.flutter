@@ -1,1 +1,1 @@
-export 'src/lottie.dart' show Lottie;
+export 'src/lottie.dart' show Lottie, RenderConfig;
