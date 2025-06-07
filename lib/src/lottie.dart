@@ -8,6 +8,14 @@ import 'package:flutter/scheduler.dart';
 import 'package:thorvg/src/thorvg.dart' as module;
 import 'package:thorvg/src/utils.dart';
 
+class RenderConfig {
+  final bool enableDevicePixelRatio;
+
+  const RenderConfig({
+    this.enableDevicePixelRatio = false,
+  });
+}
+
 class Lottie extends StatefulWidget {
   final Future<String> data;
   final double width;
@@ -17,6 +25,7 @@ class Lottie extends StatefulWidget {
   final bool repeat;
   final bool reverse;
 
+  final RenderConfig? renderConfig;
   final void Function(module.Thorvg)? onLoaded;
 
   const Lottie({
@@ -27,6 +36,7 @@ class Lottie extends StatefulWidget {
     required this.animate,
     required this.repeat,
     required this.reverse,
+    this.renderConfig,
     this.onLoaded,
   }) : super(key: key);
 
@@ -40,6 +50,7 @@ class Lottie extends StatefulWidget {
     bool? reverse,
     AssetBundle? bundle,
     String? package,
+    RenderConfig? renderConfig,
     void Function(module.Thorvg)? onLoaded,
   }) {
     return Lottie(
@@ -50,6 +61,7 @@ class Lottie extends StatefulWidget {
       animate: animate ?? true,
       repeat: repeat ?? true,
       reverse: reverse ?? false,
+      renderConfig: renderConfig,
       onLoaded: onLoaded,
     );
   }
@@ -62,6 +74,7 @@ class Lottie extends StatefulWidget {
     bool? animate,
     bool? repeat,
     bool? reverse,
+    RenderConfig? renderConfig,
     void Function(module.Thorvg)? onLoaded,
   }) {
     return Lottie(
@@ -72,6 +85,7 @@ class Lottie extends StatefulWidget {
       animate: animate ?? true,
       repeat: repeat ?? true,
       reverse: reverse ?? false,
+      renderConfig: renderConfig,
       onLoaded: onLoaded,
     );
   }
@@ -84,6 +98,7 @@ class Lottie extends StatefulWidget {
     bool? animate,
     bool? repeat,
     bool? reverse,
+    RenderConfig? renderConfig,
     void Function(module.Thorvg)? onLoaded,
   }) {
     return Lottie(
@@ -94,6 +109,7 @@ class Lottie extends StatefulWidget {
       animate: animate ?? true,
       repeat: repeat ?? true,
       reverse: reverse ?? false,
+      renderConfig: renderConfig,
       onLoaded: onLoaded,
     );
   }
@@ -105,6 +121,7 @@ class Lottie extends StatefulWidget {
       bool? animate,
       bool? repeat,
       bool? reverse,
+      RenderConfig? renderConfig,
       void Function(module.Thorvg)? onLoaded}) {
     return Lottie(
         key: key,
@@ -114,6 +131,7 @@ class Lottie extends StatefulWidget {
         animate: animate ?? true,
         repeat: repeat ?? true,
         reverse: reverse ?? false,
+        renderConfig: renderConfig,
         onLoaded: onLoaded);
   }
 
@@ -137,11 +155,14 @@ class _State extends State<Lottie> {
   int lottieWidth = 0;
   int lottieHeight = 0;
 
+  // dpr
+  double dpr = 1.0;
+
   // Render size (calculated)
   double get renderWidth =>
-      (lottieWidth > width ? width : lottieWidth).toDouble();
+      (lottieWidth > width ? width : lottieWidth).toDouble() * dpr;
   double get renderHeight =>
-      (lottieHeight > height ? height : lottieHeight).toDouble();
+      (lottieHeight > height ? height : lottieHeight).toDouble() * dpr;
 
   @override
   void initState() {
@@ -221,6 +242,10 @@ class _State extends State<Lottie> {
         errorMsg = err.toString();
       });
     }
+  }
+
+  void _tvgResize() {
+    tvg!.resize(renderWidth.toInt(), renderHeight.toInt());
   }
 
   Uint8List? _tvgAnimLoop() {
@@ -303,20 +328,36 @@ class _State extends State<Lottie> {
       return Container();
     }
 
+    final enableDevicePixelRatio = widget.renderConfig?.enableDevicePixelRatio ?? false;
+    if (enableDevicePixelRatio) {
+      // Scale DPR to balance rendering quality and performance
+      final deviceDpr = 1 + (MediaQuery.of(context).devicePixelRatio - 1) * 0.75;
+      if (dpr != deviceDpr) {
+        dpr = deviceDpr;
+        _tvgResize();
+      }
+    } else if (dpr != 1.0) {
+      dpr = 1.0;
+      _tvgResize();
+    }
+
     return Container(
       width: width.toDouble(),
       height: height.toDouble(),
       clipBehavior: Clip.hardEdge,
       decoration: const BoxDecoration(color: Colors.transparent),
-      child: CustomPaint(
-        painter: TVGCanvas(
-            width: width.toDouble(),
-            height: height.toDouble(),
-            lottieWidth: lottieWidth.toDouble(),
-            lottieHeight: lottieHeight.toDouble(),
-            renderWidth: renderWidth.toDouble(),
-            renderHeight: renderHeight.toDouble(),
-            image: img!),
+      child: Transform.scale(
+        scale: 1.0 / dpr,
+        child: CustomPaint(
+          painter: TVGCanvas(
+              width: width.toDouble(),
+              height: height.toDouble(),
+              lottieWidth: lottieWidth.toDouble(),
+              lottieHeight: lottieHeight.toDouble(),
+              renderWidth: renderWidth.toDouble(),
+              renderHeight: renderHeight.toDouble(),
+              image: img!),
+        ),
       ),
     );
   }
@@ -345,8 +386,8 @@ class TVGCanvas extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final left = renderWidth > width ? 0.0 : (width - renderWidth) / 2;
-    final top = renderHeight > height ? 0.0 : (height - renderHeight) / 2;
+    final left = (width - renderWidth) / 2;
+    final top = (height - renderHeight) / 2;
 
     paintImage(
       canvas: canvas,

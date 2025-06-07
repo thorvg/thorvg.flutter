@@ -39,6 +39,9 @@ class _MyAppState extends State<MyApp> {
                   'https://lottie.host/6d7dd6e2-ab92-4e98-826a-2f8430768886/NGnHQ6brWA.json',
                   width: 300,
                   height: 300,
+                  renderConfig: const RenderConfig(
+                    enableDevicePixelRatio: true,
+                  ),
                 ),
                 const Text(
                   'Lottie animation is running in a native API powered by ThorVG.',
