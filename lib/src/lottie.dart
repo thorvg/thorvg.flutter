@@ -137,11 +137,14 @@ class _State extends State<Lottie> {
   int lottieWidth = 0;
   int lottieHeight = 0;
 
+  // dpr
+  double dpr = 1.0;
+
   // Render size (calculated)
   double get renderWidth =>
-      (lottieWidth > width ? width : lottieWidth).toDouble();
+      (lottieWidth > width ? width : lottieWidth).toDouble() * dpr;
   double get renderHeight =>
-      (lottieHeight > height ? height : lottieHeight).toDouble();
+      (lottieHeight > height ? height : lottieHeight).toDouble() * dpr;
 
   @override
   void initState() {
@@ -221,6 +224,10 @@ class _State extends State<Lottie> {
         errorMsg = err.toString();
       });
     }
+  }
+
+  void _tvgResize() {
+    tvg!.resize(renderWidth.toInt(), renderHeight.toInt());
   }
 
   Uint8List? _tvgAnimLoop() {
@@ -303,20 +310,30 @@ class _State extends State<Lottie> {
       return Container();
     }
 
+    // Apply DPR to balance rendering quality and performance
+    final deviceDpr = 1 + (MediaQuery.of(context).devicePixelRatio - 1) * 0.75;
+    if (dpr != deviceDpr) {
+      dpr = deviceDpr;
+      _tvgResize();
+    }
+
     return Container(
       width: width.toDouble(),
       height: height.toDouble(),
       clipBehavior: Clip.hardEdge,
       decoration: const BoxDecoration(color: Colors.transparent),
-      child: CustomPaint(
-        painter: TVGCanvas(
-            width: width.toDouble(),
-            height: height.toDouble(),
-            lottieWidth: lottieWidth.toDouble(),
-            lottieHeight: lottieHeight.toDouble(),
-            renderWidth: renderWidth.toDouble(),
-            renderHeight: renderHeight.toDouble(),
-            image: img!),
+      child: Transform.scale(
+        scale: 1.0 / dpr,
+        child: CustomPaint(
+          painter: TVGCanvas(
+              width: width.toDouble(),
+              height: height.toDouble(),
+              lottieWidth: lottieWidth.toDouble(),
+              lottieHeight: lottieHeight.toDouble(),
+              renderWidth: renderWidth.toDouble(),
+              renderHeight: renderHeight.toDouble(),
+              image: img!),
+        ),
       ),
     );
   }
@@ -345,8 +362,8 @@ class TVGCanvas extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final left = renderWidth > width ? 0.0 : (width - renderWidth) / 2;
-    final top = renderHeight > height ? 0.0 : (height - renderHeight) / 2;
+    final left = (width - renderWidth) / 2;
+    final top = (height - renderHeight) / 2;
 
     paintImage(
       canvas: canvas,

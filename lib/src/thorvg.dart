@@ -87,6 +87,12 @@ class Thorvg {
     return tvg.frame(animation, currentFrame);
   }
 
+  void resize(int w, int h) {
+    width = w;
+    height = h;
+    tvg.resize(animation, width, height);
+  }
+
   Uint8List? render() {
     if (deleted) {
       throw Exception('Thorvg is already deleted');
