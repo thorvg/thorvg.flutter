@@ -1,5 +1,5 @@
 // The Android Gradle Plugin builds the native code with the Android NDK.
-group 'com.example.thorvg'
+group 'org.thorvg.example'
 version '1.0'
 
 buildscript {
@@ -25,7 +25,7 @@ apply plugin: 'com.android.library'
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace 'com.example.thorvg'
+        namespace 'org.thorvg.example'
     }
 
     // Bumping the plugin compileSdkVersion requires all clients of this plugin
