@@ -146,6 +146,8 @@ class _State extends State<Lottie> {
   double get renderHeight =>
       (lottieHeight > height ? height : lottieHeight).toDouble() * dpr;
 
+  bool _constraintChecked = false;
+
   @override
   void initState() {
     super.initState();
@@ -197,18 +199,24 @@ class _State extends State<Lottie> {
   }
 
   void _updateCanvasSize() {
-    if (widget.width == 0 || widget.height == 0) {
+    if (widget.width != 0 && widget.height != 0) {
       setState(() {
-        width = lottieWidth.toDouble();
-        height = lottieHeight.toDouble();
+        width = widget.width;
+        height = widget.height;
       });
       return;
     }
 
-    setState(() {
-      width = widget.width;
-      height = widget.height;
-    });
+    if (!mounted || _constraintChecked) return;
+
+    final renderBox = context.findRenderObject();
+    if (renderBox is RenderBox) {
+      setState(() {
+        _constraintChecked = true;
+        width = widget.width == 0 ? renderBox.size.width : widget.width;
+        height = widget.height == 0 ? renderBox.size.height : widget.height;
+      });
+    }
   }
 
   /* TVG function wrapper
@@ -300,8 +308,8 @@ class _State extends State<Lottie> {
   Widget build(BuildContext context) {
     if (errorMsg.isNotEmpty) {
       return SizedBox(
-        width: widget.width.toDouble(),
-        height: widget.height.toDouble(),
+        width: widget.width,
+        height: widget.height,
         child: ErrorWidget(errorMsg),
       );
     }
@@ -318,20 +326,20 @@ class _State extends State<Lottie> {
     }
 
     return Container(
-      width: width.toDouble(),
-      height: height.toDouble(),
+      width: width,
+      height: height,
       clipBehavior: Clip.hardEdge,
       decoration: const BoxDecoration(color: Colors.transparent),
       child: Transform.scale(
         scale: 1.0 / dpr,
         child: CustomPaint(
           painter: TVGCanvas(
-              width: width.toDouble(),
-              height: height.toDouble(),
+              width: width,
+              height: height,
               lottieWidth: lottieWidth.toDouble(),
               lottieHeight: lottieHeight.toDouble(),
-              renderWidth: renderWidth.toDouble(),
-              renderHeight: renderHeight.toDouble(),
+              renderWidth: renderWidth,
+              renderHeight: renderHeight,
               image: img!),
         ),
       ),
