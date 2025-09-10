@@ -334,13 +334,12 @@ class _State extends State<Lottie> {
         scale: 1.0 / dpr,
         child: CustomPaint(
           painter: TVGCanvas(
-              width: width,
-              height: height,
-              lottieWidth: lottieWidth.toDouble(),
-              lottieHeight: lottieHeight.toDouble(),
-              renderWidth: renderWidth,
-              renderHeight: renderHeight,
-              image: img!),
+            width: width,
+            height: height,
+            renderWidth: renderWidth,
+            renderHeight: renderHeight,
+            image: img!,
+          ),
         ),
       ),
     );
@@ -352,16 +351,11 @@ class TVGCanvas extends CustomPainter {
       {required this.image,
       required this.width,
       required this.height,
-      required this.lottieWidth,
-      required this.lottieHeight,
       required this.renderWidth,
       required this.renderHeight});
 
   double width;
   double height;
-
-  double lottieWidth;
-  double lottieHeight;
 
   double renderWidth;
   double renderHeight;
