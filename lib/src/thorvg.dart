@@ -22,6 +22,9 @@ final DynamicLibrary _dylib = () {
 
 final ThorVGFlutterBindings tvg = ThorVGFlutterBindings(_dylib);
 
+/* ThorVG Play State */
+enum PlayState { stopped, playing, deleted }
+
 /* ThorVG Dart */
 
 class Thorvg {
@@ -31,9 +34,7 @@ class Thorvg {
   double startTime = DateTime.now().millisecond / 1000;
   double speed = 1.0;
 
-  // FIXME(jinny): Should be like enumeration for each status
-  bool isPlaying = false;
-  bool deleted = false;
+  PlayState state = PlayState.stopped;
 
   late bool animate = false;
   late bool reverse = false;
@@ -47,7 +48,7 @@ class Thorvg {
   }
 
   Uint8List? animLoop() {
-    if (deleted) {
+    if (state == PlayState.deleted) {
       throw Exception('Thorvg is already deleted');
     }
 
@@ -60,7 +61,7 @@ class Thorvg {
   }
 
   bool update() {
-    if (deleted) {
+    if (state == PlayState.deleted) {
       throw Exception('Thorvg is already deleted');
     }
 
@@ -80,7 +81,7 @@ class Thorvg {
         return true;
       }
 
-      isPlaying = false;
+      state = PlayState.stopped;
       return false;
     }
 
@@ -94,7 +95,7 @@ class Thorvg {
   }
 
   Uint8List? render() {
-    if (deleted) {
+    if (state == PlayState.deleted) {
       throw Exception('Thorvg is already deleted');
     }
 
@@ -114,7 +115,7 @@ class Thorvg {
   }
 
   void play() {
-    if (deleted) {
+    if (state == PlayState.deleted) {
       throw Exception('Thorvg is already deleted');
     }
 
@@ -124,11 +125,11 @@ class Thorvg {
 
     totalFrame = tvg.totalFrame(animation);
     startTime = DateTime.now().millisecondsSinceEpoch / 1000;
-    isPlaying = true;
+    state = PlayState.playing;
   }
 
   void load(String src, int w, int h, bool animate, bool repeat, bool reverse) {
-    if (deleted) {
+    if (state == PlayState.deleted) {
       throw Exception('Thorvg is already deleted');
     }
 
@@ -161,12 +162,12 @@ class Thorvg {
   }
 
   void delete() {
-    if (deleted) {
+    if (state == PlayState.deleted) {
       return;
     }
 
     if (tvg.destroy(animation)) {
-      deleted = true;
+      state = PlayState.deleted;
     }
   }
 }
