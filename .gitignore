@@ -32,6 +32,7 @@ pubspec.lock
 # Generated binaries
 android/src/main/jniLibs/
 ios/Frameworks/
+macos/Frameworks/
 
 # Generated android build files(.cxx)
 android/app/.cxx
