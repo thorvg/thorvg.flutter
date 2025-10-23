@@ -18,6 +18,7 @@ This project provides the [ThorVG](https://github.com/thorvg/thorvg) runtime for
 | ------------- | ------------- |
 | Android | arm64-v8a, armeabi-v7a, x86_64 |
 | iOS | arm64, x86_64, x86_64(simulator) |
+| macOS | arm64, x86_64 |
 
 ## Usage
 
@@ -111,3 +112,13 @@ sh flutter_build.ios.sh
 
 Check whether this file is generated:
 - `ios/Frameworks/libthorvg.dylib`
+
+### macOS
+```sh
+# Build for Animation(Lottie)
+cd lottie
+sh flutter_build.macos.sh
+```
+
+Check whether this file is generated:
+- `macos/Frameworks/libthorvg.dylib`
