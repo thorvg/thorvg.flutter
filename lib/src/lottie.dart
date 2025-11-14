@@ -347,12 +347,15 @@ class _State extends State<Lottie> {
 }
 
 class TVGCanvas extends CustomPainter {
-  TVGCanvas(
-      {required this.image,
-      required this.width,
-      required this.height,
-      required this.renderWidth,
-      required this.renderHeight});
+  TVGCanvas({
+    required this.image,
+    required this.width,
+    required this.height,
+    required this.renderWidth,
+    required this.renderHeight,
+    this.fit = BoxFit.none,
+    this.alignment = Alignment.center,
+  });
 
   double width;
   double height;
@@ -361,6 +364,9 @@ class TVGCanvas extends CustomPainter {
   double renderHeight;
 
   ui.Image image;
+
+  BoxFit fit;
+  Alignment alignment;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -371,14 +377,15 @@ class TVGCanvas extends CustomPainter {
       canvas: canvas,
       rect: Rect.fromLTWH(left, top, renderWidth, renderHeight),
       image: image,
-      fit: BoxFit.none, //NOTE: Should make it a param
-      filterQuality: FilterQuality.high, //NOTE: Should make it a param
-      alignment: Alignment.center, //NOTE: Should make it a param
+      fit: fit,
+      alignment: alignment,
     );
   }
 
   @override
   bool shouldRepaint(TVGCanvas oldDelegate) {
-    return image != oldDelegate.image;
+    return image != oldDelegate.image ||
+        fit != oldDelegate.fit ||
+        alignment != oldDelegate.alignment;
   }
 }

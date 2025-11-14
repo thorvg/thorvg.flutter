@@ -22,6 +22,9 @@ final DynamicLibrary _dylib = () {
 
 final ThorVGFlutterBindings tvg = ThorVGFlutterBindings(_dylib);
 
+/* ThorVG Play State */
+enum PlayState { paused, playing, destroyed }
+
 /* ThorVG Dart */
 
 class Thorvg {
@@ -31,9 +34,7 @@ class Thorvg {
   double startTime = DateTime.now().millisecond / 1000;
   double speed = 1.0;
 
-  // FIXME(jinny): Should be like enumeration for each status
-  bool isPlaying = false;
-  bool deleted = false;
+  PlayState state = PlayState.paused;
 
   late bool animate = false;
   late bool reverse = false;
@@ -47,8 +48,8 @@ class Thorvg {
   }
 
   Uint8List? animLoop() {
-    if (deleted) {
-      throw Exception('Thorvg is already deleted');
+    if (state == PlayState.destroyed) {
+      throw Exception('Thorvg is already destroyed');
     }
 
     if (!update()) {
@@ -60,8 +61,8 @@ class Thorvg {
   }
 
   bool update() {
-    if (deleted) {
-      throw Exception('Thorvg is already deleted');
+    if (state == PlayState.destroyed) {
+      throw Exception('Thorvg is already destroyed');
     }
 
     final duration = tvg.duration(animation);
@@ -80,7 +81,7 @@ class Thorvg {
         return true;
       }
 
-      isPlaying = false;
+      state = PlayState.paused;
       return false;
     }
 
@@ -94,8 +95,8 @@ class Thorvg {
   }
 
   Uint8List? render() {
-    if (deleted) {
-      throw Exception('Thorvg is already deleted');
+    if (state == PlayState.destroyed) {
+      throw Exception('Thorvg is already destroyed');
     }
 
     tvg.resize(animation, width, height);
@@ -114,8 +115,8 @@ class Thorvg {
   }
 
   void play() {
-    if (deleted) {
-      throw Exception('Thorvg is already deleted');
+    if (state == PlayState.destroyed) {
+      throw Exception('Thorvg is already destroyed');
     }
 
     if (!animate) {
@@ -124,12 +125,12 @@ class Thorvg {
 
     totalFrame = tvg.totalFrame(animation);
     startTime = DateTime.now().millisecondsSinceEpoch / 1000;
-    isPlaying = true;
+    state = PlayState.playing;
   }
 
   void load(String src, int w, int h, bool animate, bool repeat, bool reverse) {
-    if (deleted) {
-      throw Exception('Thorvg is already deleted');
+    if (state == PlayState.destroyed) {
+      throw Exception('Thorvg is already destroyed');
     }
 
     List<int> list = utf8.encode(src);
@@ -161,12 +162,12 @@ class Thorvg {
   }
 
   void delete() {
-    if (deleted) {
+    if (state == PlayState.destroyed) {
       return;
     }
 
     if (tvg.destroy(animation)) {
-      deleted = true;
+      state = PlayState.destroyed;
     }
   }
 }
