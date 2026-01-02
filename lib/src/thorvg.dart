@@ -33,7 +33,7 @@ import 'thorvg_bindings_generated.dart';
 const String _libName = 'thorvg';
 
 final DynamicLibrary _dylib = () {
-  if (Platform.isIOS) {
+  if (Platform.isIOS || Platform.isMacOS) {
     return DynamicLibrary.open('lib$_libName.dylib');
   }
   if (Platform.isAndroid) {
