@@ -5,28 +5,24 @@ project('thorvg-flutter',
 cc = meson.get_compiler('cpp')
 
 
-thorvg_lib = cc.find_library('thorvg', dirs: meson.current_source_dir())
 headers = include_directories('../thorvg/inc')
+thorvg_lib_path = meson.project_source_root() + '/libthorvg.a'
 
 
 source_file = [
-   '../src/tvgFlutterLottieAnimation.cpp',
+    '../src/tvgFlutterLottieAnimation.cpp',
 ]
-
-thorvg_lib_dep = declare_dependency(dependencies: thorvg_lib, include_directories: headers)
 
 shared_library(
     'thorvg',
-    [ '../src/tvgFlutterLottieAnimation.cpp' ],
+    source_file,
     include_directories : headers,
-
-    dependencies : [thorvg_lib_dep]
+    link_args : [thorvg_lib_path]
 )
 
 library(
     'thorvg',
-    [ '../src/tvgFlutterLottieAnimation.cpp' ],
+    source_file,
     include_directories : headers,
-
-    dependencies : [thorvg_lib_dep]
+    link_args : [thorvg_lib_path]
 )

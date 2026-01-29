@@ -73,9 +73,9 @@ public:
 
         resize(width, height);
 
-        if (canvas->push(animation->picture()) != Result::Success)
+        if (canvas->add(animation->picture()) != Result::Success)
         {
-            errorMsg = "push() fail";
+            errorMsg = "add() fail";
             return false;
         }
 
@@ -202,7 +202,7 @@ private:
             return;
         }
 
-        canvas = SwCanvas::gen();
+        canvas = SwCanvas::gen(EngineOption::None);
         if (!canvas) errorMsg = "Invalid canvas";
 
         animation = Animation::gen();
