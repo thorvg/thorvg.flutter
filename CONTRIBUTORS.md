@@ -1,8 +1,8 @@
 ## Project Lead
-- Hermet Park <hermetpark@gmail.com>
+- Hermet Park @hermet
 
 ## Maintainer
-- Jinny You <jinny@lottiefiles.com>
+- Jinny You @tinyjin
 
 ## Contributor
-- TaeHyung Kwon <mok05289@korea.ac.kr>
+- TaeHyung Kwon @TaeBbong
