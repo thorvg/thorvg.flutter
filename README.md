@@ -79,7 +79,7 @@ Specify the ThorVG version in the `.gitmodules` file.
 [submodule "thorvg"]
   path = thorvg
   url = git@github.com:thorvg/thorvg.git
-  branch = v0.14.x # Change to version you want
+  branch = v1.1.x # Change to version you want
 ```
 
 Then you can run the following commands to align with that version before building.
