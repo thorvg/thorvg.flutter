@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 - 2026 ThorVG project. All rights reserved.
+ * Copyright (c) 2026 ThorVG project. All rights reserved.
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,118 +20,85 @@
  * SOFTWARE.
  */
 
-import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:thorvg/src/thorvg.dart' as module;
 import 'package:thorvg/src/utils.dart';
 import 'package:thorvg/src/view.dart';
 
-class Lottie extends TvgView {
-  final bool animate;
-  final bool repeat;
-  final bool reverse;
-
-  const Lottie({
+class Svg extends TvgView {
+  const Svg({
     super.key,
     required super.data,
     required super.width,
     required super.height,
-    required this.animate,
-    required this.repeat,
-    required this.reverse,
     super.onLoaded,
   });
 
-  static Lottie asset(
+  static Svg asset(
     String name, {
     Key? key,
     double? width,
     double? height,
-    bool? animate,
-    bool? repeat,
-    bool? reverse,
     AssetBundle? bundle,
     String? package,
     void Function(module.Thorvg)? onLoaded,
   }) {
-    return Lottie(
+    return Svg(
       key: key,
       data: parseAsset(name, bundle, package),
       width: width ?? 0,
       height: height ?? 0,
-      animate: animate ?? true,
-      repeat: repeat ?? true,
-      reverse: reverse ?? false,
       onLoaded: onLoaded,
     );
   }
 
-  static Lottie file(
+  static Svg file(
     io.File file, {
     Key? key,
     double? width,
     double? height,
-    bool? animate,
-    bool? repeat,
-    bool? reverse,
     void Function(module.Thorvg)? onLoaded,
   }) {
-    return Lottie(
+    return Svg(
       key: key,
       data: parseFile(file),
       width: width ?? 0,
       height: height ?? 0,
-      animate: animate ?? true,
-      repeat: repeat ?? true,
-      reverse: reverse ?? false,
       onLoaded: onLoaded,
     );
   }
 
-  static Lottie memory(
+  static Svg memory(
     Uint8List bytes, {
     Key? key,
     double? width,
     double? height,
-    bool? animate,
-    bool? repeat,
-    bool? reverse,
     void Function(module.Thorvg)? onLoaded,
   }) {
-    return Lottie(
+    return Svg(
       key: key,
       data: parseMemory(bytes),
       width: width ?? 0,
       height: height ?? 0,
-      animate: animate ?? true,
-      repeat: repeat ?? true,
-      reverse: reverse ?? false,
       onLoaded: onLoaded,
     );
   }
 
-  static Lottie network(
+  static Svg network(
     String src, {
     Key? key,
     double? width,
     double? height,
-    bool? animate,
-    bool? repeat,
-    bool? reverse,
     void Function(module.Thorvg)? onLoaded,
   }) {
-    return Lottie(
+    return Svg(
       key: key,
       data: parseSrc(src),
       width: width ?? 0,
       height: height ?? 0,
-      animate: animate ?? true,
-      repeat: repeat ?? true,
-      reverse: reverse ?? false,
       onLoaded: onLoaded,
     );
   }
@@ -140,99 +107,44 @@ class Lottie extends TvgView {
   State createState() => _State();
 }
 
-class _State extends TvgViewState<Lottie> {
-  int? _frameCallbackId;
-
+class _State extends TvgViewState<Svg> {
   @override
   bool tvgLoad() {
     try {
-      final info = jsonDecode(data);
-      updatePictureSize((info['w'] ?? widget.width).toInt(),
-          (info['h'] ?? widget.height).toInt());
+      tvg!.load(data, 'svg', 0, 0);
 
-      updateCanvasSize();
-
-      tvg!.load(data, 'lottie+json', renderWidth.toInt(), renderHeight.toInt(),
-          animate: widget.animate,
-          repeat: widget.repeat,
-          reverse: widget.reverse);
+      final size = tvg!.getSize();
+      updatePictureSize(size[0].toInt(), size[1].toInt());
     } catch (err) {
       setError(err);
       return false;
     }
+
+    updateCanvasSize();
 
     return true;
   }
 
   @override
   void start() {
-    _scheduleTick();
+    _tvgRender();
   }
 
   @override
   void onDprChanged() {
-    tvg?.resize(renderWidth.toInt(), renderHeight.toInt());
+    _tvgRender();
   }
 
-  @override
-  void reassemble() {
-    super.reassemble();
-
-    if (tvg == null) {
-      setError("Thorvg module has not been initialized");
-      return;
-    }
-
-    setState(() {
-      errorMsg = "";
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _unscheduleTick();
-
-      if (!await loadData()) return;
-      if (!tvgLoad()) return;
-
-      _scheduleTick();
-    });
-  }
-
-  @override
-  void dispose() {
-    _unscheduleTick();
-    super.dispose();
-  }
-
-  Uint8List? _tvgAnimLoop() {
+  void _tvgRender() async {
     try {
-      return tvg?.animLoop();
+      tvg!.resize(renderWidth.toInt(), renderHeight.toInt());
+
+      final buffer = tvg!.render();
+      if (buffer == null) return;
+
+      await updateImage(buffer);
     } catch (err) {
       setError(err);
     }
-    return null;
-  }
-
-  void _scheduleTick() {
-    _frameCallbackId = SchedulerBinding.instance.scheduleFrameCallback(_tick);
-  }
-
-  void _unscheduleTick() {
-    if (_frameCallbackId == null) {
-      return;
-    }
-
-    SchedulerBinding.instance.cancelFrameCallbackWithId(_frameCallbackId!);
-    _frameCallbackId = null;
-  }
-
-  void _tick(Duration timestamp) async {
-    _scheduleTick();
-
-    final buffer = _tvgAnimLoop();
-    if (buffer == null) {
-      return;
-    }
-
-    await updateImage(buffer);
   }
 }

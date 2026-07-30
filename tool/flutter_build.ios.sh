@@ -7,9 +7,9 @@ rm -rf build_flutter_aarch64 libthorvg.a
 mkdir build_flutter_aarch64
 
 cd ../thorvg
-meson setup -Db_lto=true -Ddefault_library=static -Dloaders="lottie, png, jpg" -Dextra="lottie_exp" -Dthreads=false --cross-file ./cross/ios_arm64.txt ../lottie/build_flutter_aarch64
+meson setup -Db_lto=true -Ddefault_library=static -Dloaders="lottie, svg, png, jpg" -Dextra="lottie_exp" -Dthreads=false --cross-file ./cross/ios_arm64.txt ../tool/build_flutter_aarch64
 
-cd ../lottie
+cd ../tool
 ninja -C build_flutter_aarch64
 
 cp build_flutter_aarch64/src/libthorvg-1.a libthorvg.a
@@ -23,9 +23,9 @@ rm -rf build_flutter_x86_64 libthorvg.a
 mkdir build_flutter_x86_64
 
 cd ../thorvg
-meson setup -Db_lto=true -Ddefault_library=static -Dloaders="lottie, png, jpg" -Dextra="lottie_exp" -Dthreads=false --cross-file ./cross/ios_simulator_x86_64.txt ../lottie/build_flutter_x86_64
+meson setup -Db_lto=true -Ddefault_library=static -Dloaders="lottie, svg, png, jpg" -Dextra="lottie_exp" -Dthreads=false --cross-file ./cross/ios_simulator_x86_64.txt ../tool/build_flutter_x86_64
 
-cd ../lottie
+cd ../tool
 ninja -C build_flutter_x86_64
 
 cp build_flutter_x86_64/src/libthorvg-1.a libthorvg.a
@@ -45,4 +45,3 @@ build_flutter_aarch64/libthorvg.dylib \
 
 mkdir -p ../ios/Frameworks
 cp build_flutter_ios/libthorvg.dylib ../ios/Frameworks/
-

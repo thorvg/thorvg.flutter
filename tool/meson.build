@@ -10,7 +10,7 @@ thorvg_lib_path = meson.project_source_root() + '/libthorvg.a'
 
 
 source_file = [
-    '../src/tvgFlutterLottieAnimation.cpp',
+    '../src/tvgFlutterView.cpp',
 ]
 
 shared_library(

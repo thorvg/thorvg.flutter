@@ -64,11 +64,11 @@ Future<String> parseAsset(
 
 Future<String> parseFile(io.File file) async {
   final bytes = await file.readAsBytes();
-  return String.fromCharCodes(bytes);
+  return utf8.decode(bytes);
 }
 
 Future<String> parseMemory(Uint8List data) async {
-  return String.fromCharCodes(data);
+  return utf8.decode(data);
 }
 
 Future<ui.Image> decodeImage(Uint8List buffer, int width, int height) async {

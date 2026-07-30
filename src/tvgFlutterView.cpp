@@ -21,25 +21,25 @@
  */
 
 #include <thorvg.h>
-#include "tvgFlutterLottieAnimation.h"
+#include "tvgFlutterView.h"
 
 using namespace std;
 using namespace tvg;
 
 static const char* NoError = "None";
 
-class __attribute__((visibility("default"))) TvgLottieAnimation
+class __attribute__((visibility("default"))) TvgView
 {
 public:
-    ~TvgLottieAnimation()
+    ~TvgView()
     {
         free(buffer);
         Initializer::term();
     }
 
-    static TvgLottieAnimation* create()
+    static TvgView* create()
     {
-        return new TvgLottieAnimation();
+        return new TvgView();
     }
 
     bool load(char* data, char* mimetype, int width, int height)
@@ -59,7 +59,7 @@ public:
         delete(animation);
         animation = Animation::gen();
 
-        if (animation->picture()->load(data, strlen(data), "lottie+json", "", false) != Result::Success)
+        if (animation->picture()->load(data, strlen(data), mimetype, "", true) != Result::Success)
         {
             errorMsg = "load() fail";
             return false;
@@ -192,7 +192,7 @@ public:
     }
 
 private:
-    explicit TvgLottieAnimation()
+    explicit TvgView()
     {
         errorMsg = NoError;
 
@@ -225,66 +225,66 @@ extern "C"
 {
 #endif
 
-    FlutterLottieAnimation* create()
+    FlutterView* create()
     {
-        return (FlutterLottieAnimation*)TvgLottieAnimation::create();
+        return (FlutterView*)TvgView::create();
     }
 
-    bool destroy(FlutterLottieAnimation* animation)
+    bool destroy(FlutterView* view)
     {
-        if (!animation) return false;
-        delete (reinterpret_cast<TvgLottieAnimation*>(animation));
+        if (!view) return false;
+        delete (reinterpret_cast<TvgView*>(view));
         return true;
     }
 
-    bool load(FlutterLottieAnimation* animation, char* data, char* mimetype, int width, int height)
+    bool load(FlutterView* view, char* data, char* mimetype, int width, int height)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->load(data, mimetype, width, height);
+        return reinterpret_cast<TvgView*>(view)->load(data, mimetype, width, height);
     }
 
-    bool update(FlutterLottieAnimation* animation)
+    bool update(FlutterView* view)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->update();
+        return reinterpret_cast<TvgView*>(view)->update();
     }
 
-    uint8_t* render(FlutterLottieAnimation* animation)
+    uint8_t* render(FlutterView* view)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->render();
+        return reinterpret_cast<TvgView*>(view)->render();
     }
 
-    float* size(FlutterLottieAnimation* animation)
+    float* size(FlutterView* view)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->size();
+        return reinterpret_cast<TvgView*>(view)->size();
     }
 
-    void resize(FlutterLottieAnimation* animation, int w, int h)
+    void resize(FlutterView* view, int w, int h)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->resize(w, h);
+        return reinterpret_cast<TvgView*>(view)->resize(w, h);
     }
 
-    float duration(FlutterLottieAnimation* animation)
+    float duration(FlutterView* view)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->duration();
+        return reinterpret_cast<TvgView*>(view)->duration();
     }
 
-    float totalFrame(FlutterLottieAnimation* animation)
+    float totalFrame(FlutterView* view)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->totalFrame();
+        return reinterpret_cast<TvgView*>(view)->totalFrame();
     }
 
-    float curFrame(FlutterLottieAnimation* animation)
+    float curFrame(FlutterView* view)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->curFrame();
+        return reinterpret_cast<TvgView*>(view)->curFrame();
     }
 
-    bool frame(FlutterLottieAnimation* animation, float no)
+    bool frame(FlutterView* view, float no)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->frame(no);
+        return reinterpret_cast<TvgView*>(view)->frame(no);
     }
 
-    const char* error(FlutterLottieAnimation* animation)
+    const char* error(FlutterView* view)
     {
-        return reinterpret_cast<TvgLottieAnimation*>(animation)->error();
+        return reinterpret_cast<TvgView*>(view)->error();
     }
 
 #ifdef __cplusplus

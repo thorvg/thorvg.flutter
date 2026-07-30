@@ -46,6 +46,17 @@ class _MyAppState extends State<MyApp> {
                   textAlign: TextAlign.center,
                 ),
                 spacerSmall,
+                Svg.network(
+                  'https://raw.githubusercontent.com/thorvg/thorvg.site/main/logo/ThorVG-simple.svg',
+                  width: 300,
+                  height: 300,
+                ),
+                const Text(
+                  'SVG is rendered in a native API powered by ThorVG.',
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
+                spacerSmall,
               ],
             ),
           ),

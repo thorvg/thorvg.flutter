@@ -20,7 +20,6 @@
  * SOFTWARE.
  */
 
-import 'dart:convert';
 import 'dart:ffi' as ffi;
 import 'dart:ffi';
 import 'dart:io';
@@ -47,7 +46,7 @@ final ThorVGFlutterBindings tvg = ThorVGFlutterBindings(_dylib);
 /* ThorVG Dart */
 
 class Thorvg {
-  late ffi.Pointer<FlutterLottieAnimation> animation;
+  late ffi.Pointer<FlutterView> view;
   double totalFrame = 0;
   double currentFrame = 0;
   double startTime = DateTime.now().millisecond / 1000;
@@ -65,7 +64,7 @@ class Thorvg {
   int height = 0;
 
   Thorvg() {
-    animation = tvg.create();
+    view = tvg.create();
   }
 
   Uint8List? animLoop() {
@@ -86,7 +85,7 @@ class Thorvg {
       throw Exception('Thorvg is already deleted');
     }
 
-    final duration = tvg.duration(animation);
+    final duration = tvg.duration(view);
     final currentTime = DateTime.now().millisecondsSinceEpoch / 1000;
     currentFrame = (currentTime - startTime) / duration * totalFrame * speed;
 
@@ -106,13 +105,13 @@ class Thorvg {
       return false;
     }
 
-    return tvg.frame(animation, currentFrame);
+    return tvg.frame(view, currentFrame);
   }
 
   void resize(int w, int h) {
     width = w;
     height = h;
-    tvg.resize(animation, width, height);
+    tvg.resize(view, width, height);
   }
 
   Uint8List? render() {
@@ -120,16 +119,16 @@ class Thorvg {
       throw Exception('Thorvg is already deleted');
     }
 
-    tvg.resize(animation, width, height);
+    tvg.resize(view, width, height);
 
     // FIXME(jinny): Sometimes it causes delay, call in threading?
-    final isUpdated = tvg.update(animation);
+    final isUpdated = tvg.update(view);
 
     if (!isUpdated) {
       return null;
     }
 
-    final buffer = tvg.render(animation);
+    final buffer = tvg.render(view);
     final canvasBuffer = buffer.asTypedList(width * height * 4);
 
     return canvasBuffer;
@@ -144,18 +143,16 @@ class Thorvg {
       return;
     }
 
-    totalFrame = tvg.totalFrame(animation);
+    totalFrame = tvg.totalFrame(view);
     startTime = DateTime.now().millisecondsSinceEpoch / 1000;
     isPlaying = true;
   }
 
-  void load(String src, int w, int h, bool animate, bool repeat, bool reverse) {
+  void load(String src, String mimetype, int w, int h,
+      {bool animate = false, bool repeat = false, bool reverse = false}) {
     if (deleted) {
       throw Exception('Thorvg is already deleted');
     }
-
-    List<int> list = utf8.encode(src);
-    Uint8List bytes = Uint8List.fromList(list);
 
     width = w;
     height = h;
@@ -163,16 +160,19 @@ class Thorvg {
     this.reverse = reverse;
     this.repeat = repeat;
 
-    tvg.create();
+    final nativeBytes = src.toNativeUtf8().cast<Char>();
+    final nativeType = mimetype.toNativeUtf8().cast<Char>();
 
-    final nativeBytes = bytes.toPointer().cast<Char>();
-    final nativeType = 'json'.toPointer().cast<Char>();
+    try {
+      bool result = tvg.load(view, nativeBytes, nativeType, width, height);
 
-    bool result = tvg.load(animation, nativeBytes, nativeType, width, height);
-
-    if (!result) {
-      final errorMsg = (tvg.error(animation) as Pointer<Utf8>).toDartString();
-      throw Exception('Failed to load Lottie: $errorMsg');
+      if (!result) {
+        final errorMsg = (tvg.error(view) as Pointer<Utf8>).toDartString();
+        throw Exception('Failed to load: $errorMsg');
+      }
+    } finally {
+      calloc.free(nativeBytes);
+      calloc.free(nativeType);
     }
 
     render();
@@ -182,38 +182,18 @@ class Thorvg {
     }
   }
 
+  List<double> getSize() {
+    final psize = tvg.size(view);
+    return [psize[0], psize[1]];
+  }
+
   void delete() {
     if (deleted) {
       return;
     }
 
-    if (tvg.destroy(animation)) {
+    if (tvg.destroy(view)) {
       deleted = true;
     }
-  }
-}
-
-/* Dart Extension */
-
-extension Uint8ListExtension on Uint8List {
-  /// Converts a Uint8List to a Pointer<Uint8>.
-  Pointer<Uint8> toPointer() {
-    final pointer = calloc<Uint8>(length);
-    for (var i = 0; i < length; i++) {
-      pointer[i] = this[i];
-    }
-    return pointer;
-  }
-}
-
-extension StringExtension on String {
-  /// Converts a String to a Pointer<Uint8> (assuming ASCII characters).
-  Pointer<Uint8> toPointer() {
-    final units = utf8.encode(this);
-    final pointer = calloc<Uint8>(units.length);
-    for (var i = 0; i < units.length; i++) {
-      pointer[i] = units[i];
-    }
-    return pointer;
   }
 }
