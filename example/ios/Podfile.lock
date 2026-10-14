@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - thorvg (1.0.0-beta.0):
+  - thorvg (0.0.1):
     - Flutter
 
 DEPENDENCIES:
