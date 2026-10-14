@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'thorvg'
-  s.version          = '1.0.0-beta.0'
+  s.version          = '0.0.1'
   s.summary          = 'ThorVG for Flutter'
   s.description      = <<-DESC
 ThorVG Flutter Runtime
