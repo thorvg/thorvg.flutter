@@ -33,7 +33,7 @@ const String _libName = 'thorvg';
 
 final DynamicLibrary _dylib = () {
   if (Platform.isIOS) {
-    return DynamicLibrary.open('lib$_libName.dylib');
+    return DynamicLibrary.process();
   }
   if (Platform.isAndroid) {
     return DynamicLibrary.open('lib$_libName.so');

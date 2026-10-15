@@ -18,7 +18,7 @@ This project provides the [ThorVG](https://github.com/thorvg/thorvg) runtime for
 | Platform | Architecture |
 | ------------- | ------------- |
 | Android | arm64-v8a, armeabi-v7a, x86_64 |
-| iOS | arm64, x86_64, x86_64(simulator) |
+| iOS | arm64 (device and simulator), x86_64 (simulator) |
 
 ## Usage
 
@@ -102,13 +102,3 @@ Check whether these files are generated:
 - `android/src/main/arm64-v8a/libthorvg.so`
 - `android/src/main/armeabi-v7a/libthorvg.so`
 - `android/src/main/x86_64/libthorvg.so`
-
-### iOS
-```sh
-# Build ThorVG native libraries
-cd tool
-sh flutter_build.ios.sh
-```
-
-Check whether this file is generated:
-- `ios/Frameworks/libthorvg.dylib`
