@@ -1,5 +1,6 @@
 .dart_tool/
-thorvg/
+build/
+tool/build_flutter_ios/
 .gitmodules
 ffigen.yaml
 example/assets
@@ -9,3 +10,4 @@ doc/*.png
 *.iml
 _*
 .*
+ios/.cocoapods/
