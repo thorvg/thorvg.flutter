@@ -1,3 +1,4 @@
+[![LFX Active Contributors](https://insights.linuxfoundation.org/api/badge/active-contributors?project=thorvg&repos=https://github.com/thorvg/thorvg.flutter)](https://insights.linuxfoundation.org/project/thorvg/repository/thorvg_thorvg.flutter)
 [![CodeFactor](https://www.codefactor.io/repository/github/thorvg/thorvg.flutter/badge)](https://www.codefactor.io/repository/github/thorvg/thorvg.flutter)
 [![License](https://img.shields.io/badge/licence-MIT-green.svg?style=flat)](LICENSE)
 [![Wikipedia](https://img.shields.io/badge/Wikipedia-000000?style=flat&logo=wikipedia&logoColor=white)](https://en.wikipedia.org/wiki/Thor_Vector_Graphics)
