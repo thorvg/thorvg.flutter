@@ -17,7 +17,7 @@ shared_library(
     'thorvg',
     source_file,
     include_directories : headers,
-    link_args : [thorvg_lib_path]
+    link_args : [thorvg_lib_path, '-Wl,-z,max-page-size=16384']
 )
 
 library(
