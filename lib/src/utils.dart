@@ -24,31 +24,12 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'dart:ui' as ui;
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:thorvg/src/platform/platform.dart';
 
 Future<String> parseSrc(String src) async {
   if (src.startsWith('http')) {
-    final url = Uri.parse(src);
-    HttpClient httpClient = HttpClient();
-    String errorMsg = '';
-
-    try {
-      final request = await httpClient.getUrl(url);
-      final response = await request.close();
-
-      if (response.statusCode == HttpStatus.ok) {
-        return await response.transform(utf8.decoder).join();
-      } else {
-        errorMsg = 'Failed to load data. Error: ${response.statusCode}';
-      }
-    } catch (error) {
-      errorMsg = 'Failed to load data. Error: $error';
-    } finally {
-      httpClient.close();
-    }
-
-    throw Exception(errorMsg);
+    return await fetchSrc(Uri.parse(src));
   }
 
   return src;
