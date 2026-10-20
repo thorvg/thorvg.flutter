@@ -90,6 +90,14 @@ abstract class TvgViewState<T extends TvgView> extends State<T> {
     if (!await loadData()) return;
     if (data.isEmpty) return;
 
+    try {
+      await module.Thorvg.init();
+    } catch (err) {
+      setError(err);
+      return;
+    }
+    if (!mounted) return;
+
     tvg ??= module.Thorvg();
     if (!tvgLoad()) return;
 
@@ -111,6 +119,7 @@ abstract class TvgViewState<T extends TvgView> extends State<T> {
   }
 
   void setError(Object err) {
+    if (!mounted) return;
     setState(() {
       errorMsg = err.toString();
     });

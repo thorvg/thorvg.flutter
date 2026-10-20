@@ -20,33 +20,15 @@
  * SOFTWARE.
  */
 
-import 'dart:ffi' as ffi;
-import 'dart:ffi';
-import 'dart:io';
 import 'dart:typed_data';
-import 'package:ffi/ffi.dart';
-import 'thorvg_bindings_generated.dart';
+import 'platform/platform.dart';
 
-/* Linking library */
-
-const String _libName = 'thorvg';
-
-final DynamicLibrary _dylib = () {
-  if (Platform.isIOS) {
-    return DynamicLibrary.open('lib$_libName.dylib');
-  }
-  if (Platform.isAndroid) {
-    return DynamicLibrary.open('lib$_libName.so');
-  }
-  throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
-}();
-
-final ThorVGFlutterBindings tvg = ThorVGFlutterBindings(_dylib);
+final ThorVGFlutterBindings tvg = ThorVGFlutterBindings();
 
 /* ThorVG Dart */
 
 class Thorvg {
-  late ffi.Pointer<FlutterView> view;
+  late FlutterView view;
   double totalFrame = 0;
   double currentFrame = 0;
   double startTime = DateTime.now().millisecond / 1000;
@@ -66,6 +48,9 @@ class Thorvg {
   Thorvg() {
     view = tvg.create();
   }
+
+  /// Loads the ThorVG engine module. Must be awaited before creating [Thorvg].
+  static Future<void> init() => tvg.init();
 
   Uint8List? animLoop() {
     if (deleted) {
@@ -128,10 +113,7 @@ class Thorvg {
       return null;
     }
 
-    final buffer = tvg.render(view);
-    final canvasBuffer = buffer.asTypedList(width * height * 4);
-
-    return canvasBuffer;
+    return tvg.render(view, width, height);
   }
 
   void play() {
@@ -160,19 +142,8 @@ class Thorvg {
     this.reverse = reverse;
     this.repeat = repeat;
 
-    final nativeBytes = src.toNativeUtf8().cast<Char>();
-    final nativeType = mimetype.toNativeUtf8().cast<Char>();
-
-    try {
-      bool result = tvg.load(view, nativeBytes, nativeType, width, height);
-
-      if (!result) {
-        final errorMsg = (tvg.error(view) as Pointer<Utf8>).toDartString();
-        throw Exception('Failed to load: $errorMsg');
-      }
-    } finally {
-      calloc.free(nativeBytes);
-      calloc.free(nativeType);
+    if (!tvg.load(view, src, mimetype, width, height)) {
+      throw Exception('Failed to load: ${tvg.error(view)}');
     }
 
     render();
@@ -183,8 +154,7 @@ class Thorvg {
   }
 
   List<double> getSize() {
-    final psize = tvg.size(view);
-    return [psize[0], psize[1]];
+    return tvg.size(view);
   }
 
   void delete() {
