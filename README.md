@@ -53,6 +53,27 @@ class MyApp extends StatelessWidget {
 }
 ```
 
+### SVG
+Use `Svg` to render a static SVG image. It can be loaded with `Svg.asset`, `Svg.network`, `Svg.file` and `Svg.memory`.
+
+```dart
+import 'package:thorvg/thorvg.dart';
+// ...
+Column(
+  children: [
+    // Load an SVG from the assets
+    Svg.asset('assets/svg/thorvg.svg', width: 200, height: 200),
+
+    // Load an SVG from a url
+    Svg.network(
+      'https://raw.githubusercontent.com/thorvg/thorvg.site/main/logo/ThorVG-simple.svg',
+      width: 200,
+      height: 200,
+    ),
+  ],
+)
+```
+
 ## Generate Flutter binding
 
 If you change the binding interface in these files
