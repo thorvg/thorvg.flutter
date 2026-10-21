@@ -19,7 +19,7 @@ This project provides the [ThorVG](https://github.com/thorvg/thorvg) runtime for
 | Platform | Architecture |
 | ------------- | ------------- |
 | Android | arm64-v8a, armeabi-v7a, x86_64 |
-| iOS | arm64, x86_64, x86_64(simulator) |
+| iOS | arm64, x86_64(simulator) |
 
 ## Usage
 
