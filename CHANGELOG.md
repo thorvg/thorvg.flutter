@@ -1,3 +1,9 @@
+## 1.1.1
+
+* Update ThorVG to v1.1.4
+* Add `Svg` widget for static SVG rendering
+* Raise minimum SDK to Dart 3.4 / Flutter 3.22
+
 ## 1.1.0
 
 * Update ThorVG to v1.1.0
