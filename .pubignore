@@ -9,3 +9,10 @@ doc/*.png
 *.iml
 _*
 .*
+# Build outputs
+build/
+builddir/
+build_flutter_*/
+lottie/
+tool/build_flutter_*/
+tool/libthorvg.a
