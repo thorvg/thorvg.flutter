@@ -1,6 +1,7 @@
 # Contributors
 
-For definitions and responsibilities of each project role, see [Roles & Responsibilities](https://github.com/thorvg/thorvg/wiki/Roles-&-Responsibilities).
+- For definitions and responsibilities of each project role, see [Roles & Responsibilities](https://github.com/thorvg/thorvg/wiki/Roles-&-Responsibilities).
+- For reviewers by module, see [CODEOWNERS](https://github.com/thorvg/thorvg.flutter/blob/main/CODEOWNERS).
 
 ## Project Lead
 - Hermet Park @hermet
