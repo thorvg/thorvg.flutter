@@ -8,6 +8,13 @@ cc = meson.get_compiler('cpp')
 headers = include_directories('../thorvg/inc')
 thorvg_lib_path = meson.project_source_root() + '/libthorvg.a'
 
+shared_link_args = [thorvg_lib_path]
+
+# 16 KB page size compatibility (ELF only)
+if host_machine.system() == 'android'
+    shared_link_args += ['-Wl,-z,max-page-size=16384']
+endif
+
 
 source_file = [
     '../src/tvgFlutterView.cpp',
@@ -17,7 +24,7 @@ shared_library(
     'thorvg',
     source_file,
     include_directories : headers,
-    link_args : [thorvg_lib_path, '-Wl,-z,max-page-size=16384']
+    link_args : shared_link_args
 )
 
 library(
