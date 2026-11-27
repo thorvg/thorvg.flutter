@@ -127,10 +127,14 @@ Check whether these files are generated:
 
 ### iOS
 ```sh
-# Build ThorVG native libraries
+# Generate ThorVG config.h
 cd tool
-sh flutter_build.ios.sh
+sh flutter_setup.ios.sh
 ```
 
 Check whether this file is generated:
-- `ios/Frameworks/libthorvg.dylib`
+- `ios/config.h`
+
+CocoaPods then compiles ThorVG from the `thorvg` submodule with this config and links it statically. See `ios/thorvg.podspec` for details.
+
+If you update the submodule, run `flutter_setup.ios.sh` again and then `pod install`.
